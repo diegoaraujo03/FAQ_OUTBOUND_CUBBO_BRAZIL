@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Copiloto Outbound Cubbo</title>
+<meta name="description" content="FAQ interativo e playbook de Outbound Sales para os AEs da Cubbo: ICP, WhatsApp, Cold Call, Cold E-mail, LinkedIn Sales Navigator e ganchos sazonais.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600;700&family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cubbo-blue: #0741DD;
+    --cubbo-blue-hover: #0535B8;
+    --cubbo-navy: #031C63;
+    --bg: #F7F9FC;
+    --card: #FFFFFF;
+    --border: #EFEFEF;
+    --text: #1F2937;
+    --muted: #5B6475;
+    --ok: #0F8A4B;
+    --ok-bg: #E7F6EE;
+    --bad: #C62828;
+    --bad-bg: #FDECEC;
+    --warn-bg: #FFF6E0;
+    --warn: #8A5A00;
+    --tint: #EEF3FE;
+    --radius: 8px;
+    --shadow-ds-sm: 0 1px 2px rgba(3, 28, 99, .06), 0 1px 3px rgba(3, 28, 99, .04);
+    --shadow-ds-md: 0 4px 12px rgba(3, 28, 99, .08), 0 2px 4px rgba(3, 28, 99, .04);
+    --font-title: 'Manrope', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+    --font-ui: 'DM Sans', system-ui, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.6 var(--font-body); }
+  h1, h2, h3, h4 { font-family: var(--font-title); color: var(--cubbo-navy); margin: 0; line-height: 1.25; }
+  a { color: var(--cubbo-blue); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+
+  /* Header */
+  header { background: var(--cubbo-navy); color: #fff; padding: 28px 0 24px; }
+  header h1 { color: #fff; font-size: 26px; font-weight: 800; }
+  header p { margin: 6px 0 0; color: #C9D5F5; max-width: 720px; }
+  .team { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .chip { font: 600 12px var(--font-ui); padding: 4px 10px; border-radius: 999px; background: rgba(255,255,255,.12); color: #fff; }
+
+  /* Goal + season bar */
+  .bar { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: -16px auto 0; position: relative; }
+  .panel { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-ds-md); padding: 16px; }
+  .eyebrow { font: 700 11px var(--font-ui); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .big { font: 800 24px var(--font-title); color: var(--cubbo-navy); }
+  .season-name { color: var(--cubbo-blue); }
+  .small { font-size: 13px; color: var(--muted); }
+  .upcoming { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .upcoming span { font: 500 12px var(--font-ui); background: var(--tint); color: var(--cubbo-navy); padding: 3px 8px; border-radius: 999px; }
+
+  /* Personalization */
+  .personal { margin-top: 16px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; align-items: end; }
+  label { display: block; font: 600 12px var(--font-ui); color: var(--cubbo-navy); margin-bottom: 4px; }
+  input, select { width: 100%; font: 14px var(--font-body); padding: 9px 10px; border: 1px solid #D9DEE8; border-radius: var(--radius); background: #fff; color: var(--text); }
+  input:focus, select:focus { outline: 2px solid var(--cubbo-blue); outline-offset: 0; border-color: var(--cubbo-blue); }
+
+  /* Toolbar */
+  .toolbar { margin: 20px 0 12px; display: flex; flex-direction: column; gap: 10px; }
+  .search { position: relative; }
+  .search input { padding-left: 36px; height: 44px; font-size: 15px; box-shadow: var(--shadow-ds-sm); }
+  .search svg { position: absolute; left: 11px; top: 12px; width: 20px; height: 20px; color: var(--muted); }
+  .tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+  .tab { flex: none; font: 600 13px var(--font-ui); border: 1px solid var(--border); background: var(--card); color: var(--cubbo-navy); padding: 7px 12px; border-radius: var(--radius); cursor: pointer; }
+  .tab[aria-pressed="true"] { background: var(--cubbo-blue); border-color: var(--cubbo-blue); color: #fff; }
+
+  /* Cards */
+  .grid { display: flex; flex-direction: column; gap: 10px; padding-bottom: 48px; }
+  details.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-ds-sm); }
+  details.card[open] { box-shadow: var(--shadow-ds-md); }
+  summary { list-style: none; cursor: pointer; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; }
+  summary::-webkit-details-marker { display: none; }
+  summary .q { flex: 1; font: 700 16px var(--font-title); color: var(--cubbo-navy); }
+  summary .tag { flex: none; font: 600 11px var(--font-ui); color: var(--cubbo-blue); background: var(--tint); padding: 3px 8px; border-radius: 999px; margin-top: 2px; }
+  summary .chev { flex: none; width: 18px; height: 18px; margin-top: 3px; color: var(--muted); transition: transform .15s; }
+  details[open] summary .chev { transform: rotate(180deg); }
+  .body { padding: 0 16px 16px; border-top: 1px solid var(--border); }
+  .body > *:first-child { margin-top: 14px; }
+  .body p { margin: 10px 0; }
+  .body ul { margin: 8px 0; padding-left: 20px; }
+  .why { background: var(--tint); border-left: 3px solid var(--cubbo-blue); padding: 10px 12px; border-radius: 0 var(--radius) var(--radius) 0; font-size: 14px; margin: 12px 0; }
+  .why b { font-family: var(--font-ui); color: var(--cubbo-navy); }
+  .snip { margin: 12px 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .snip-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; background: #F2F5FA; padding: 6px 8px 6px 12px; }
+  .snip-head span { font: 600 12px var(--font-ui); color: var(--cubbo-navy); }
+  .snip pre { margin: 0; padding: 12px; white-space: pre-wrap; word-wrap: break-word; font: 13.5px/1.55 var(--font-body); background: #fff; }
+  .snip.code pre { font-family: var(--font-mono); font-size: 12.5px; }
+  .btn { font: 600 12px var(--font-ui); border: 0; border-radius: var(--radius); padding: 6px 10px; background: var(--cubbo-blue); color: #fff; cursor: pointer; white-space: nowrap; }
+  .btn:hover { background: var(--cubbo-blue-hover); }
+  .btn.done { background: var(--ok); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+  th, td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  th { font: 700 12px var(--font-ui); color: var(--cubbo-navy); background: #F2F5FA; }
+  .table-scroll { overflow-x: auto; }
+  mark { background: #FFE9A8; color: inherit; padding: 0 1px; border-radius: 2px; }
+  .empty { text-align: center; color: var(--muted); padding: 40px 0; }
+
+  /* Calculator */
+  .calc { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 12px 0; }
+  .results { display: grid; gap: 8px; margin-top: 12px; }
+  .res { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: var(--radius); font-size: 14px; }
+  .res.ok { background: var(--ok-bg); color: var(--ok); }
+  .res.bad { background: var(--bad-bg); color: var(--bad); }
+  .res.na { background: #F2F5FA; color: var(--muted); }
+  .res b { font-family: var(--font-ui); }
+  .verdict { margin-top: 10px; padding: 12px; border-radius: var(--radius); font: 700 15px var(--font-ui); text-align: center; }
+
+  footer { color: var(--muted); font-size: 12px; text-align: center; padding: 0 0 32px; }
+
+  @media (max-width: 760px) {
+    .bar, .personal, .calc { grid-template-columns: 1fr; }
+    header h1 { font-size: 22px; }
+    summary .tag { display: none; }
+  }
+  @media print {
+    header, .toolbar, .personal, .btn { display: none !important; }
+    details.card { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>Copiloto de Outbound &amp; FAQ Interativo — Cubbo</h1>
+    <p>Playbook tático para os Account Executives Full-Cycle: ICP, WhatsApp, Cold Call, Cold E-mail e LinkedIn Sales Navigator — com gancho sazonal automático pela data de hoje.</p>
+    <div class="team">
+      <span class="chip">Diego · AE &amp; Pioneiro de Outbound</span>
+      <span class="chip">Renan · AE</span>
+      <span class="chip">Fernanda · AE</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="bar" aria-label="Meta e sazonalidade">
+    <div class="panel">
+      <div class="eyebrow">Meta Cubbo · próximos 2 anos</div>
+      <div class="big">600.000 pedidos/mês</div>
+      <div class="small">≈ <b id="goalClients">300</b> clientes de <b id="goalAvgLabel">2.000</b> pedidos/mês em média. Cada logo novo de ICP conta.</div>
+    </div>
+    <div class="panel">
+      <div class="eyebrow">Hoje: <span id="today">—</span> · Gancho sazonal ativo</div>
+      <div class="big"><span class="season-name" id="seasonName">—</span></div>
+      <div class="small" id="seasonNote">—</div>
+      <div class="upcoming" id="upcoming"></div>
+    </div>
+  </section>
+
+  <section class="panel personal" aria-label="Personalizar templates" style="box-shadow:var(--shadow-ds-sm)">
+    <div>
+      <label for="pAE">AE (quem assina)</label>
+      <select id="pAE">
+        <option>Diego</option>
+        <option>Renan</option>
+        <option>Fernanda</option>
+      </select>
+    </div>
+    <div>
+      <label for="pNome">Nome do lead</label>
+      <input id="pNome" placeholder="ex: Carla">
+    </div>
+    <div>
+      <label for="pMarca">Marca / loja</label>
+      <input id="pMarca" placeholder="ex: Loja Aurora">
+    </div>
+    <div>
+      <label for="pCanal">Canal de venda principal</label>
+      <input id="pCanal" placeholder="ex: Mercado Livre, Shopify">
+    </div>
+  </section>
+
+  <div class="toolbar">
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Busque: objeção, galpão, boolean, black friday, e-mail…" aria-label="Buscar no FAQ">
+    </div>
+    <div class="tabs" id="tabs" role="toolbar" aria-label="Categorias"></div>
+  </div>
+
+  <section class="grid" id="grid" aria-live="polite"></section>
+</main>
+
+<footer>Cubbo · Outbound Sales Playbook · Prompt do Copiloto em <code>prompts/SYSTEM_PROMPT.md</code></footer>
+
+<script>
+(() => {
+  'use strict';
+
+  /* ---------- Calendário sazonal do e-commerce BR ---------- */
+  const DAY = 864e5;
+  const atMidnight = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const nthWeekday = (y, m, wd, n) => { const d = new Date(y, m, 1); d.setDate(1 + ((wd - d.getDay() + 7) % 7) + (n - 1) * 7); return d; };
+  const easter = y => { // algoritmo de Meeus/Jones/Butcher
+    const a = y % 19, b = Math.floor(y / 100), c = y % 100, d = Math.floor(b / 4), e = b % 4,
+      f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30,
+      i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451),
+      month = Math.floor((h + l - 7 * m + 114) / 31), day = ((h + l - 7 * m + 114) % 31) + 1;
+    return new Date(y, month - 1, day);
+  };
+  const addDays = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+
+  // peso 3 = pico logístico (onboarding 45–60 dias antes), 2 = relevante, 1 = campanha menor
+  function eventsFor(y) {
+    const bf = addDays(nthWeekday(y, 10, 4, 4), 1); // sexta após o 4ª quinta de novembro
+    return [
+      { name: 'Liquidação de Janeiro', date: new Date(y, 0, 10), w: 2,
+        hook: 'liquidação de janeiro e a troca/devolução pós-Natal' },
+      { name: 'Volta às Aulas', date: new Date(y, 1, 1), w: 1, hook: 'volta às aulas' },
+      { name: 'Carnaval', date: addDays(easter(y), -47), w: 1, hook: 'Carnaval (feriado que trava transportadora)' },
+      { name: 'Dia do Consumidor', date: new Date(y, 2, 15), w: 2, hook: 'Dia do Consumidor (a "Black Friday do 1º semestre")' },
+      { name: 'Páscoa', date: easter(y), w: 1, hook: 'Páscoa' },
+      { name: 'Dia das Mães', date: nthWeekday(y, 4, 0, 2), w: 3, hook: 'Dia das Mães, a 2ª maior data do varejo' },
+      { name: 'Dia dos Namorados', date: new Date(y, 5, 12), w: 3, hook: 'Dia dos Namorados' },
+      { name: 'Dia dos Pais', date: nthWeekday(y, 7, 0, 2), w: 2, hook: 'Dia dos Pais' },
+      { name: '9.9 / Dia do Cliente', date: new Date(y, 8, 9), w: 2, hook: 'campanhas 9.9 e Dia do Cliente dos marketplaces' },
+      { name: 'Dia das Crianças', date: new Date(y, 9, 12), w: 2, hook: 'Dia das Crianças' },
+      { name: '11.11', date: new Date(y, 10, 11), w: 2, hook: 'o 11.11 dos marketplaces' },
+      { name: 'Black Friday', date: bf, w: 3, hook: 'Black Friday' },
+      { name: 'Cyber Monday', date: addDays(bf, 3), w: 1, hook: 'Cyber Monday' },
+      { name: 'Natal', date: new Date(y, 11, 25), w: 3, hook: 'Natal e o prazo de entrega antes do dia 25' },
+    ];
+  }
+
+  const today = atMidnight(new Date());
+  const all = [...eventsFor(today.getFullYear()), ...eventsFor(today.getFullYear() + 1)]
+    .map(e => ({ ...e, days: Math.round((e.date - today) / DAY) }))
+    .filter(e => e.days >= 0)
+    .sort((a, b) => a.days - b.days);
+
+  // Gancho principal: o próximo pico logístico (peso 3) nos próximos 90 dias; senão, a data mais próxima.
+  const main = all.find(e => e.w === 3 && e.days <= 90) || all[0];
+  const fmt = d => d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+  const fmtFull = d => d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+  function windowNote(e) {
+    if (e.days === 0) return `É hoje! Use o gancho do "próximo pico" e o pós-evento (atrasos, devoluções).`;
+    if (e.days > 60) return `Faltam ${e.days} dias (${fmt(e.date)}). Janela de onboarding abre em ~${e.days - 60} dias: comece a semear agora.`;
+    if (e.days >= 30) return `Faltam ${e.days} dias (${fmt(e.date)}). Janela de onboarding ABERTA — urgência real para decidir.`;
+    return `Faltam ${e.days} dias (${fmt(e.date)}). Tarde para migrar tudo: venda contingência/excedente e o próximo pico.`;
+  }
+
+  document.getElementById('today').textContent = fmtFull(today);
+  document.getElementById('seasonName').textContent = main.name;
+  document.getElementById('seasonNote').textContent = windowNote(main);
+  document.getElementById('upcoming').innerHTML = all.slice(0, 5)
+    .map(e => `<span>${e.name} · ${fmt(e.date)} · ${e.days}d</span>`).join('');
+
+  const avgOrdersPerClient = 2000;
+  document.getElementById('goalClients').textContent = Math.ceil(600000 / avgOrdersPerClient).toLocaleString('pt-BR');
+  document.getElementById('goalAvgLabel').textContent = avgOrdersPerClient.toLocaleString('pt-BR');
+
+  /* ---------- Conteúdo do FAQ ---------- */
+  // Placeholders dinâmicos: {nome} {marca} {ae} {canal} {gancho} {evento} {dias} {dataEvento}
+  const CATS = [
+    ['todos', 'Todos'], ['icp', 'ICP & Qualificação'], ['whatsapp', 'WhatsApp'], ['call', 'Cold Call'],
+    ['objecoes', 'Objeções'], ['email', 'Cold E-mail'], ['linkedin', 'LinkedIn & Apollo'],
+    ['sazonal', 'Sazonalidade'], ['meta', 'Meta & Cadência'],
+  ];
+
+  const FAQ = [
+    /* ===== ICP ===== */
+    { cat: 'icp', q: 'Qual é o ICP da Cubbo? Quem eu devo (e não devo) prospectar?', open: true, html: `
+      <p>Somente <b>marcas de e-commerce e sellers de marketplace</b> (varejo digital). Tudo fora disso é descarte imediato.</p>
+      <div class="table-scroll"><table>
+        <tr><th>Critério</th><th>Régua obrigatória</th><th>Como checar rápido</th></tr>
+        <tr><td>Volume</td><td><b>&gt; 600 pedidos/mês</b></td><td>Tráfego do site × conversão, nº de vendas no marketplace, pergunta direta na call</td></tr>
+        <tr><td>Receita mínima p/ Cubbo</td><td><b>≥ R$ 10.000/mês</b> de faturamento operacional</td><td>Pedidos/mês × tarifa média estimada por pedido</td></tr>
+        <tr><td>Regra dos 20%</td><td>Custo logístico total <b>≤ 20% da receita</b> da marca</td><td>(frete + armazenagem + equipe + embalagem) ÷ faturamento</td></tr>
+        <tr><td>Segmento</td><td>E-commerce D2C, marketplaces (ML, Shopee, Amazon, Magalu…)</td><td>Site com checkout próprio ou loja oficial em marketplace</td></tr>
+      </table></div>
+      <p><b>Verticais com fit natural:</b> moda &amp; acessórios, beleza &amp; cosméticos, suplementos, pet, casa &amp; decoração, infantil.</p>
+      <p><b>Descarte:</b> B2B industrial, serviços, restaurantes/food service, lojas só físicas, infoprodutos, marcas com &lt; 600 pedidos/mês.</p>
+      <div class="why"><b>Por quê?</b> Abaixo de 600 pedidos o ganho de escala do fulfillment não aparece e o cliente não chega ao mínimo operacional — vira churn. A Regra dos 20% garante que a conta fecha para o cliente: logística acima disso já está comendo a margem e o deal trava no financeiro.</div>` },
+
+    { cat: 'icp', q: 'Calculadora de qualificação: esse lead passa na régua?', calc: true, open: true, html: `
+      <p>Preencha com o que você descobriu na pesquisa ou na discovery. O veredito aparece na hora.</p>
+      <div class="calc">
+        <div><label for="cPed">Pedidos por mês</label><input id="cPed" type="number" min="0" inputmode="numeric" placeholder="ex: 1500"></div>
+        <div><label for="cFat">Faturamento mensal da marca (R$)</label><input id="cFat" type="number" min="0" inputmode="numeric" placeholder="ex: 300000"></div>
+        <div><label for="cLog">Custo logístico total/mês (R$)</label><input id="cLog" type="number" min="0" inputmode="numeric" placeholder="ex: 45000"></div>
+        <div><label for="cTar">Tarifa Cubbo estimada por pedido (R$)</label><input id="cTar" type="number" min="0" step="0.01" inputmode="decimal" placeholder="use a tabela vigente"></div>
+      </div>
+      <div class="results" id="cRes"></div>
+      <div class="verdict" id="cVer"></div>
+      <div class="why"><b>Dica de mentor:</b> se faltar dado, não chute — transforme a lacuna em pergunta de discovery: <i>"Hoje, quanto do faturamento vai para frete e operação?"</i></div>` },
+
+    { cat: 'icp', q: 'Como estimar se a marca faz +600 pedidos/mês antes de ligar?', html: `
+      <ul>
+        <li><b>Tráfego do site</b> (SimilarWeb / extensões): visitas/mês × <b>1% a 1,5%</b> de conversão. Ex: 60 mil visitas × 1% ≈ 600 pedidos.</li>
+        <li><b>Marketplace:</b> nº de vendas acumuladas e reputação (ML "MercadoLíder", Shopee "Indicado"). Vendas recentes em anúncios top.</li>
+        <li><b>Sinais de operação saturada:</b> vagas abertas para "auxiliar de expedição/estoque", reclamações de atraso no Reclame Aqui, prazos de envio longos.</li>
+        <li><b>Stack:</b> Shopify, VTEX, Nuvemshop, Tray, Bling, Tiny — tecnografia no Apollo indica maturidade.</li>
+        <li><b>Mídia paga ativa:</b> anúncios rodando (Biblioteca de Anúncios da Meta) = volume e caixa.</li>
+      </ul>
+      <div class="why"><b>Por quê?</b> Chegar na call já sabendo a ordem de grandeza do volume troca "quantos pedidos vocês fazem?" por "imagino que vocês estejam na casa de 2 mil pedidos, certo?" — você ganha autoridade em 10 segundos.</div>` },
+
+    { cat: 'icp', q: 'Quais sinais de compra (triggers) priorizam um lead na fila?', html: `
+      <div class="table-scroll"><table>
+        <tr><th>Sinal</th><th>Leitura</th><th>Abordagem</th></tr>
+        <tr><td>Vaga de expedição/estoque aberta</td><td>Operação crescendo na raça</td><td>"Vi que estão contratando pra expedição…"</td></tr>
+        <tr><td>Reclamações de atraso (Reclame Aqui)</td><td>Dor ativa de SLA</td><td>Foco em prazo e reputação</td></tr>
+        <tr><td>Rodada de investimento / expansão</td><td>Vai escalar e precisa de estrutura</td><td>Crescer sem imobilizar em galpão</td></tr>
+        <tr><td>Entrada em novo marketplace</td><td>Complexidade multicanal</td><td>Um estoque, vários canais</td></tr>
+        <tr><td>Troca de Head de Ops/E-commerce</td><td>Novo líder quer resultado rápido</td><td>Quick win nos primeiros 90 dias</td></tr>
+        <tr><td>Proximidade de pico sazonal</td><td>Medo de não dar conta</td><td>Gancho sazonal (veja o topo da página)</td></tr>
+      </table></div>` },
+
+    /* ===== WHATSAPP ===== */
+    { cat: 'whatsapp', q: 'Quais são as regras de ouro do WhatsApp (canal principal)?', html: `
+      <ul>
+        <li><b>Máx. 3–4 linhas.</b> Se precisa rolar a tela, está longo.</li>
+        <li><b>1 pergunta por mensagem</b>, fácil de responder (sim/não ou número).</li>
+        <li><b>Nada de link, PDF ou áudio no 1º toque</b> — derruba resposta e aumenta bloqueio.</li>
+        <li><b>Personalização real</b> na 1ª linha (canal, produto, sinal de compra).</li>
+        <li><b>Horários fortes:</b> 8h–9h30, 12h–13h30, 17h30–19h. Evite segunda cedo e sexta à tarde.</li>
+        <li><b>Cadência:</b> D0 abertura → D2 follow-up de valor → D5 gancho sazonal → D9 break-up.</li>
+      </ul>
+      <div class="why"><b>Por quê?</b> WhatsApp é um canal pessoal: a mensagem precisa parecer escrita por uma pessoa para uma pessoa. Pergunta simples reduz o esforço de resposta, e resposta é o KPI — não a leitura.</div>` },
+
+    { cat: 'whatsapp', q: 'Template WhatsApp — abertura por dor de atraso/prazo', snips: [
+      ['Abertura (D0)', `Oi {nome}, tudo bem? Aqui é o {ae}, da Cubbo.\nVi que a {marca} vende bem no {canal}. Hoje o envio de vocês é feito internamente ou já terceirizam?\nPergunto porque temos ajudado marcas do seu porte a entregar mais rápido sem aumentar o custo por pedido.`],
+      ['Follow-up (D2)', `{nome}, só complementando: a maioria das marcas que atendemos chegou até nós quando o prazo de entrega começou a pesar na reputação do {canal}.\nIsso é um tema aí hoje ou está sob controle?`],
+    ], why: 'Começa com uma pergunta de diagnóstico (in-house ou terceirizado?), não com pitch. Qualquer resposta te dá informação e abre conversa.' },
+
+    { cat: 'whatsapp', q: 'Template WhatsApp — abertura por dor de frete caro / margem', snips: [
+      ['Abertura (D0)', `Oi {nome}! {ae} aqui, da Cubbo (fulfillment para e-commerce).\nPergunta rápida: hoje o frete + operação consome quanto do faturamento da {marca}? Mais ou menos de 15%?`],
+      ['Resposta se "mais de 15%"', `Faz sentido olhar. Marcas nessa faixa costumam ganhar margem só mudando onde o estoque fica e como o pedido é despachado.\nTopa 15 min essa semana pra eu te mostrar uma simulação com os seus números?`],
+    ], why: 'Pergunta numérica e binária ("mais ou menos de 15%?") é fácil de responder e já qualifica a Regra dos 20% no primeiro toque.' },
+
+    { cat: 'whatsapp', q: 'Template WhatsApp — gancho sazonal automático (data de hoje)', seasonal: true, snips: [
+      ['Gancho sazonal (D5)', `{nome}, faltam {dias} dias pra {gancho} ({dataEvento}).\nA {marca} já tem a operação preparada pra dobrar o volume sem atrasar entrega? Se ainda for um ponto de atenção, dá tempo de organizar — mas a janela é curta.`],
+      ['Versão ultra-curta', `{nome}, a operação da {marca} já está pronta pra {evento}? Pergunto porque essa é a época em que a gente mais ajuda marcas a não travar no pico.`],
+    ], why: 'O gancho é calculado pela data do sistema e mira o próximo pico logístico cuja janela de onboarding está aberta. Fulfillment se vende 45–60 dias antes do pico: é aí que a urgência é real.' },
+
+    { cat: 'whatsapp', q: 'Template WhatsApp — break-up (última tentativa)', snips: [
+      ['Break-up (D9)', `{nome}, imagino que a rotina esteja corrida. Vou parar de insistir por aqui 🙂\nSe em algum momento logística virar prioridade na {marca}, é só me chamar. Posso te mandar só uma última coisa: um comparativo de custo por pedido in-house x fulfillment?`],
+    ], why: 'O break-up tira a pressão e costuma ter a maior taxa de resposta da cadência. A pergunta final dá uma saída de baixo compromisso.' },
+
+    { cat: 'whatsapp', q: 'Template WhatsApp — sellers de marketplace (ML, Shopee, Amazon)', snips: [
+      ['Abertura seller', `Oi {nome}, {ae} da Cubbo aqui. Vi a loja da {marca} no {canal} — bela reputação!\nVocês vendem em mais de um marketplace hoje? Pergunto porque centralizar o estoque num fulfillment costuma ser o que destrava crescimento multicanal.`],
+    ], why: 'Seller de marketplace vive de reputação e prazo. Elogio específico + pergunta sobre multicanal abre a dor de gerir vários estoques.' },
+
+    /* ===== COLD CALL ===== */
+    { cat: 'call', q: 'Roteiro de abertura em 15 segundos (cold call)', snips: [
+      ['Abertura 15s', `Oi {nome}, aqui é o {ae}, da Cubbo. Sei que te liguei do nada — posso tomar 30 segundos pra você decidir se vale a conversa?\n\n[sim]\n\nA gente faz o fulfillment de marcas de e-commerce como a {marca}: armazenagem, separação e envio. Normalmente eu falo com quem sente atraso de entrega ou frete pesando na margem. Algum desses é tema aí hoje?`],
+    ], why: 'Pedir permissão ("posso tomar 30 segundos?") baixa a guarda. A pergunta final entrega duas dores para o lead escolher — ele se qualifica sozinho.' },
+
+    { cat: 'call', q: 'Perguntas de discovery que qualificam o ICP na call', snips: [
+      ['Discovery', `1. Quantos pedidos vocês fazem num mês normal? E no pico?\n2. Hoje a operação é própria, terceirizada ou misturada?\n3. Somando frete, equipe, galpão e embalagem — quanto isso representa do faturamento?\n4. Qual foi o maior problema da operação na última data forte?\n5. Se nada mudar, o que acontece no próximo pico ({evento})?\n6. Quem mais participa de uma decisão como essa?`],
+    ], why: 'As perguntas 1 e 3 cobrem a régua do ICP (600 pedidos e 20%). A 5 cria urgência usando o próprio cenário do lead. A 6 mapeia o comitê de compra cedo.' },
+
+    { cat: 'call', q: 'Como fechar a call e marcar a reunião?', snips: [
+      ['Fechamento', `Pelo que você me contou, faz sentido a gente montar uma simulação com os números da {marca}. São 30 minutos, eu te mostro custo por pedido e prazo comparados com o que vocês têm hoje. Fica melhor terça ou quinta?`],
+    ], why: 'Resuma a dor com as palavras do lead, entregue um próximo passo concreto (simulação) e dê duas opções de data — nunca "quando fica bom pra você?".' },
+
+    /* ===== OBJEÇÕES ===== */
+    { cat: 'objecoes', q: 'Matriz de contorno de objeções', html: `
+      <div class="table-scroll"><table>
+        <tr><th>Objeção</th><th>Técnica</th><th>Resposta sugerida</th></tr>
+        <tr><td><b>"Já tenho galpão próprio."</b></td><td>Validar + custo oculto</td><td>"Faz todo sentido, muita marca começa assim. Posso perguntar: vocês sabem o custo total por pedido, somando aluguel, equipe e ociosidade fora do pico? A maioria descobre que é maior do que imagina — e aí a conversa é sobre escala, não sobre largar o galpão."</td></tr>
+        <tr><td><b>"Uso outra logística."</b></td><td>Benchmark sem atacar</td><td>"Ótimo, então vocês já entendem o valor de terceirizar. De 0 a 10, quanto você dá pra operação na última data forte? … O que faltou pra ser 10?"</td></tr>
+        <tr><td><b>"Minha equipe resolve."</b></td><td>Custo de oportunidade</td><td>"Imagino que resolva, e isso fala bem do time. A pergunta é: se essa equipe não precisasse embalar pedido, onde ela estaria gerando mais resultado pra {marca}?"</td></tr>
+        <tr><td><b>"Me manda por e-mail."</b></td><td>Qualificar o interesse</td><td>"Mando sim. Pra eu não te mandar algo genérico: hoje o maior ponto é prazo ou custo?"</td></tr>
+        <tr><td><b>"Não é prioridade agora."</b></td><td>Âncora temporal</td><td>"Entendo. Quando vocês pensam em olhar isso — antes ou depois de {evento}? Pergunto porque a implantação leva algumas semanas."</td></tr>
+        <tr><td><b>"Deve ser caro."</b></td><td>Reframe para custo total</td><td>"Depende da comparação. Se olhar só o frete, pode parecer; olhando custo total por pedido — galpão, equipe, erro de envio, atraso — geralmente a conta muda. Topa fazer essa conta com os seus números?"</td></tr>
+      </table></div>
+      <div class="why"><b>Por quê?</b> Toda resposta segue <b>Validar → Perguntar → Reposicionar</b>. Brigar com a objeção gera defesa; uma pergunta faz o lead chegar sozinho à conclusão de que existe um problema.</div>` },
+
+    { cat: 'objecoes', q: '"Já tenho galpão próprio" — roteiro completo', snips: [
+      ['Roteiro', `Lead: A gente já tem galpão próprio.\n\n{ae}: Faz sentido — e ter galpão mostra que a {marca} já tem volume. Duas perguntas rápidas:\n1) No pico, o galpão dá conta ou vocês precisam contratar temporário?\n2) Fora do pico, quanto do espaço e da equipe fica ocioso?\n\n[escuta]\n\n{ae}: Muitos clientes nossos mantiveram o galpão e usam a Cubbo pra absorver o excedente e as datas fortes. Faz sentido olhar esse modelo híbrido?`],
+    ], why: 'O modelo híbrido remove o maior medo (desmontar o que já existe) e transforma um "não" em teste de baixo risco.' },
+
+    /* ===== EMAIL ===== */
+    { cat: 'email', q: 'Regras do cold e-mail (Apollo / Nuvia)', html: `
+      <ul>
+        <li><b>Assunto:</b> 2–5 palavras, minúsculas, parecendo e-mail interno. Ex: <i>"envios da {marca}"</i>.</li>
+        <li><b>Corpo:</b> até 80 palavras. Estrutura: observação → problema → Cubbo em 1 frase → pergunta.</li>
+        <li><b>Sem jargão:</b> nada de "solução end-to-end", "sinergia", "otimizar processos".</li>
+        <li><b>CTA de interesse</b>, não de agenda: "faz sentido?" converte mais que "30 min terça?".</li>
+        <li><b>Texto puro</b>, sem imagem e sem link no 1º e-mail (entregabilidade).</li>
+      </ul>` },
+
+    { cat: 'email', q: 'Template cold e-mail #1 — problema + solução em 1 frase', snips: [
+      ['Assunto', `envios da {marca}`],
+      ['Corpo', `Oi {nome},\n\nMarcas que vendem no {canal} no ritmo da {marca} costumam esbarrar em dois limites: prazo de entrega e custo por pedido subindo junto com o volume.\n\nA Cubbo cuida da armazenagem, separação e envio para que vocês cresçam sem montar mais estrutura.\n\nFaz sentido conversar sobre isso?\n\n{ae}\nCubbo`],
+    ], why: 'Uma observação sobre o lead, um problema reconhecível e a Cubbo em uma frase. A pergunta final pede só um "sim".' },
+
+    { cat: 'email', q: 'Template cold e-mail #2 — gancho sazonal', seasonal: true, snips: [
+      ['Assunto', `{marca} na {evento}`],
+      ['Corpo', `Oi {nome},\n\nFaltam {dias} dias para {gancho}. É quando a operação costuma virar gargalo: pedido atrasado, equipe no limite e avaliação negativa.\n\nA Cubbo absorve esse pico com fulfillment pronto — sem vocês contratarem temporário ou alugarem espaço.\n\nVale uma conversa antes que a janela feche?\n\n{ae}\nCubbo`],
+    ], why: 'A contagem regressiva cria urgência concreta. O corpo fala do custo de não agir (atraso, avaliação negativa) em vez de listar recursos.' },
+
+    { cat: 'email', q: 'Template cold e-mail #3 — follow-up curto (bump)', snips: [
+      ['Corpo', `{nome}, subindo este e-mail.\n\nSe logística não for sua área, quem na {marca} seria a melhor pessoa pra conversar sobre isso?`],
+    ], why: 'O pedido de indicação resolve duas coisas: reengaja o lead e, se ele não for o decisor, te leva direto a quem é.' },
+
+    /* ===== LINKEDIN / APOLLO ===== */
+    { cat: 'linkedin', q: 'Boolean de cargos (Sales Navigator → Lead filters → Keywords/Title)', snips: [
+      ['Decisores — cargo', `("Head de E-commerce" OR "Gerente de E-commerce" OR "Coordenador de E-commerce" OR "Head de Operações" OR "Gerente de Operações" OR "Diretor de Operações" OR "Gerente de Logística" OR "Head de Logística" OR "Supply Chain" OR COO OR CEO OR Fundador OR Founder OR Cofundador OR "Co-founder" OR Sócio)`, 'code'],
+      ['Excluir ruído (acrescente ao final)', `NOT (Estagiário OR Estágio OR Intern OR Assistente OR Auxiliar OR Recrutador OR "Tech Recruiter" OR Consultor OR Professor OR Freelancer)`, 'code'],
+    ], why: 'Operadores em MAIÚSCULAS, termos compostos entre aspas e parênteses agrupando o OR. Fundadores são decisores em marcas até ~50 pessoas; acima disso, mire Ops/E-commerce.' },
+
+    { cat: 'linkedin', q: 'Boolean de contas (Account filters → Keywords)', snips: [
+      ['Contas de e-commerce', `("e-commerce" OR ecommerce OR "loja virtual" OR "loja online" OR D2C OR DTC OR "direct to consumer" OR marketplace OR Shopify OR VTEX OR Nuvemshop OR Tray)`, 'code'],
+      ['Excluir concorrentes e fornecedores', `NOT (fulfillment OR "operador logístico" OR transportadora OR "3PL" OR agência OR "agência digital" OR software OR SaaS OR consultoria OR ERP)`, 'code'],
+      ['Verticais com fit (opcional, combine com AND)', `AND (moda OR beleza OR cosméticos OR skincare OR suplementos OR fitness OR pet OR decoração OR "casa e decoração" OR infantil OR acessórios OR calçados)`, 'code'],
+    ], why: 'O NOT tira da lista quem vende para e-commerce (agências, SaaS, outros 3PLs), que é o maior ruído dessa busca.' },
+
+    { cat: 'linkedin', q: 'Filtros cirúrgicos no Sales Navigator e no Apollo', html: `
+      <div class="table-scroll"><table>
+        <tr><th>Filtro</th><th>Sales Navigator</th><th>Apollo</th></tr>
+        <tr><td>Geografia</td><td>Brasil (priorize SP, SC, PR, MG, RJ)</td><td>Location: Brazil</td></tr>
+        <tr><td>Setor</td><td>Retail, Retail Apparel and Fashion, Online and Mail Order Retail, Personal Care Product Manufacturing</td><td>Industry: Retail, Apparel &amp; Fashion, Cosmetics, Consumer Goods</td></tr>
+        <tr><td>Headcount</td><td>11–50 e 51–200 (sweet spot)</td><td># Employees: 11–200</td></tr>
+        <tr><td>Tecnologia</td><td>—</td><td>Technologies: Shopify, VTEX, Nuvemshop, Tray, Bling</td></tr>
+        <tr><td>Crescimento</td><td>Company headcount growth &gt; 10%</td><td>Job postings: "expedição", "logística"</td></tr>
+        <tr><td>Atividade</td><td>"Posted on LinkedIn in past 30 days"</td><td>Buying intent: logistics / fulfillment</td></tr>
+        <tr><td>Senioridade</td><td>Owner, CXO, VP, Director, Manager</td><td>Seniority: Owner, Founder, C-Suite, Head, Director, Manager</td></tr>
+      </table></div>
+      <div class="why"><b>Por quê?</b> Headcount de 11–200 é o proxy mais confiável para marcas com volume de ICP que ainda não têm uma operação logística madura. Tecnografia no Apollo confirma que a venda é de fato online.</div>` },
+
+    { cat: 'linkedin', q: 'Nota de conexão e 1ª mensagem no LinkedIn', snips: [
+      ['Nota de conexão (≤ 200 caracteres)', `Oi {nome}, acompanho marcas de e-commerce como a {marca} e gosto de trocar ideia com quem cuida de operação. Bora conectar?`],
+      ['1ª mensagem após aceite', `Valeu por aceitar, {nome}! Curiosidade genuína: qual tem sido o maior desafio de operação da {marca} esse ano — prazo, custo ou escala nos picos?`],
+    ], why: 'Na conexão, zero pitch: você está pedindo uma conexão, não uma reunião. A 1ª mensagem oferece três dores para o lead escolher, o que facilita a resposta.' },
+
+    /* ===== SAZONAL ===== */
+    { cat: 'sazonal', q: 'Calendário sazonal do e-commerce e janelas de onboarding', seasonal: true, calendar: true, html: `
+      <p>Datas calculadas automaticamente a partir de hoje. A <b>janela de onboarding</b> abre ~60 dias antes de cada pico: é o melhor momento para abordar.</p>
+      <div class="table-scroll"><table id="calTable"></table></div>
+      <div class="why"><b>Por quê?</b> Implantar fulfillment leva semanas (integração, recebimento de estoque, testes). Quem aborda na semana da data está vendendo o <i>próximo</i> pico. Use a data atual como argumento de urgência, não como enfeite.</div>` },
+
+    /* ===== META & CADÊNCIA ===== */
+    { cat: 'meta', q: 'Como a meta de 600 mil pedidos/mês se traduz no meu dia a dia?', html: `
+      <div class="table-scroll"><table>
+        <tr><th>Tamanho médio do cliente</th><th>Clientes para 600k/mês</th><th>Novos por mês (24 meses)</th></tr>
+        <tr><td>1.000 pedidos/mês</td><td>600</td><td>~25</td></tr>
+        <tr><td>2.000 pedidos/mês</td><td>300</td><td>~13</td></tr>
+        <tr><td>5.000 pedidos/mês</td><td>120</td><td>~5</td></tr>
+      </table></div>
+      <p class="small">Conta simplificada: não considera a base atual nem o churn. Use para orientar o foco, não como meta oficial.</p>
+      <div class="why"><b>Por quê?</b> Um cliente de 5.000 pedidos vale por cinco de 1.000 e dá quase o mesmo trabalho de fechar. Priorize a fila pelo volume estimado: as contas maiores de ICP primeiro.</div>` },
+
+    { cat: 'meta', q: 'Qual cadência multicanal eu devo rodar por lead?', html: `
+      <div class="table-scroll"><table>
+        <tr><th>Dia</th><th>Canal</th><th>Ação</th></tr>
+        <tr><td>D0</td><td>LinkedIn + WhatsApp</td><td>Conexão sem pitch + abertura por dor</td></tr>
+        <tr><td>D1</td><td>Cold Call</td><td>Abertura 15s → discovery</td></tr>
+        <tr><td>D2</td><td>WhatsApp</td><td>Follow-up de valor</td></tr>
+        <tr><td>D3</td><td>E-mail (Apollo/Nuvia)</td><td>Template #1</td></tr>
+        <tr><td>D5</td><td>WhatsApp + E-mail</td><td>Gancho sazonal</td></tr>
+        <tr><td>D7</td><td>Cold Call</td><td>2ª tentativa, horário diferente</td></tr>
+        <tr><td>D9</td><td>WhatsApp</td><td>Break-up</td></tr>
+      </table></div>
+      <div class="why"><b>Por quê?</b> Alternar canais aumenta a chance de pegar o lead onde ele está, sem parecer spam em nenhum deles. O WhatsApp é a espinha dorsal; call e e-mail reforçam.</div>` },
+  ];
+
+  /* ---------- Renderização ---------- */
+  const $ = id => document.getElementById(id);
+  const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+  const catLabel = Object.fromEntries(CATS);
+  let activeCat = 'todos';
+
+  function vars() {
+    const v = (id, fb) => $(id).value.trim() || fb;
+    return {
+      ae: v('pAE', 'Diego'), nome: v('pNome', '[Nome]'), marca: v('pMarca', '[Marca]'), canal: v('pCanal', '[canal]'),
+      gancho: main.hook, evento: main.name, dias: String(main.days), dataEvento: fmt(main.date),
+    };
+  }
+  const fill = (t, v) => t.replace(/\{(\w+)\}/g, (m, k) => (k in v ? v[k] : m));
+
+  function renderCalendar() {
+    const t = $('calTable');
+    if (!t) return;
+    const rows = all.slice(0, 10).map(e => {
+      const open = Math.max(0, e.days - 60);
+      const status = e.days <= 60 && e.days >= 30 ? '🟢 Janela aberta' : e.days < 30 ? '🟠 Curto prazo' : `⚪ Abre em ${open}d`;
+      const w = e.w === 3 ? 'Pico' : e.w === 2 ? 'Relevante' : 'Menor';
+      return `<tr><td><b>${e.name}</b></td><td>${fmtFull(e.date)}</td><td>${e.days}</td><td>${w}</td><td>${status}</td></tr>`;
+    }).join('');
+    t.innerHTML = `<tr><th>Data</th><th>Dia</th><th>Faltam (dias)</th><th>Peso</th><th>Status</th></tr>${rows}`;
+  }
+
+  function highlight(html, term) {
+    if (!term) return html;
+    const re = new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    return html.replace(/(<[^>]+>)|([^<]+)/g, (m, tag, text) => tag || text.replace(re, '<mark>$1</mark>'));
+  }
+
+  function render() {
+    const term = $('q').value.trim();
+    const v = vars();
+    const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    const nt = norm(term);
+    const openIds = new Set([...document.querySelectorAll('details.card[open]')].map(d => d.dataset.i));
+    const firstRender = !$('grid').children.length;
+
+    const items = FAQ.map((f, i) => ({ f, i })).filter(({ f }) => {
+      if (activeCat !== 'todos' && f.cat !== activeCat) return false;
+      if (!nt) return true;
+      const hay = norm([f.q, f.html || '', f.why || '', ...(f.snips || []).map(s => s[0] + ' ' + s[1])].join(' ').replace(/<[^>]+>/g, ' '));
+      return hay.includes(nt);
+    });
+
+    if (!items.length) {
+      $('grid').innerHTML = `<p class="empty">Nada encontrado para "${esc(term)}". Tente outro termo ou a aba "Todos".</p>`;
+      return;
+    }
+
+    $('grid').innerHTML = items.map(({ f, i }) => {
+      const snips = (f.snips || []).map(([label, text, kind], j) => `
+        <div class="snip ${kind === 'code' ? 'code' : ''}">
+          <div class="snip-head"><span>${esc(label)}</span><button class="btn" data-copy="${i}-${j}">Copiar</button></div>
+          <pre id="s-${i}-${j}">${highlight(esc(fill(text, v)), term)}</pre>
+        </div>`).join('');
+      const body = (f.html ? highlight(fill(f.html, v), term) : '') + snips +
+        (f.why ? `<div class="why"><b>Por quê?</b> ${highlight(esc(f.why), term)}</div>` : '');
+      const isOpen = nt || openIds.has(String(i)) || (firstRender && f.open);
+      return `<details class="card" data-i="${i}" ${isOpen ? 'open' : ''}>
+        <summary>
+          <span class="q">${highlight(esc(f.q), term)}</span>
+          <span class="tag">${catLabel[f.cat]}</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </summary>
+        <div class="body">${body}</div>
+      </details>`;
+    }).join('');
+
+    renderCalendar();
+    bindCalc();
+  }
+
+  /* ---------- Calculadora ---------- */
+  const calcState = { cPed: '', cFat: '', cLog: '', cTar: '' };
+  const brl = n => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+
+  function bindCalc() {
+    if (!$('cPed')) return;
+    Object.keys(calcState).forEach(k => {
+      $(k).value = calcState[k];
+      $(k).addEventListener('input', e => { calcState[k] = e.target.value; runCalc(); });
+    });
+    runCalc();
+  }
+
+  function runCalc() {
+    const n = k => (calcState[k] === '' ? null : Number(calcState[k]));
+    const ped = n('cPed'), fat = n('cFat'), log = n('cLog'), tar = n('cTar');
+    const checks = [];
+
+    checks.push(ped == null ? ['na', 'Volume: informe os pedidos/mês.']
+      : ped > 600 ? ['ok', `Volume: ${ped.toLocaleString('pt-BR')} pedidos/mês — acima de 600 ✔ (${(ped / 6000).toFixed(2).replace('.', ',')}% da meta de 600 mil)`]
+      : ['bad', `Volume: ${ped.toLocaleString('pt-BR')} pedidos/mês — precisa ser mais de 600.`]);
+
+    if (fat == null || log == null) checks.push(['na', 'Regra dos 20%: informe faturamento e custo logístico.']);
+    else if (fat <= 0) checks.push(['bad', 'Regra dos 20%: faturamento precisa ser maior que zero.']);
+    else {
+      const pct = (log / fat) * 100;
+      checks.push(pct <= 20 ? ['ok', `Regra dos 20%: logística = ${pct.toFixed(1).replace('.', ',')}% da receita ✔`]
+        : ['bad', `Regra dos 20%: logística = ${pct.toFixed(1).replace('.', ',')}% da receita — acima do teto de 20%.`]);
+    }
+
+    if (ped == null || tar == null) checks.push(['na', 'Mínimo operacional Cubbo: informe pedidos e a tarifa estimada por pedido.']);
+    else {
+      const rev = ped * tar;
+      checks.push(rev >= 10000 ? ['ok', `Mínimo operacional: ${brl(rev)}/mês estimado para a Cubbo ✔`]
+        : ['bad', `Mínimo operacional: ${brl(rev)}/mês estimado — abaixo de R$ 10.000.`]);
+    }
+
+    $('cRes').innerHTML = checks.map(([k, t]) => `<div class="res ${k}"><b>${k === 'ok' ? '✔' : k === 'bad' ? '✖' : '•'}</b><span>${esc(t)}</span></div>`).join('');
+    const ver = $('cVer');
+    if (checks.some(c => c[0] === 'bad')) {
+      ver.textContent = 'Fora do ICP — não avance. Registre o motivo no CRM e siga para o próximo lead.';
+      ver.style.cssText = 'background:var(--bad-bg);color:var(--bad)';
+    } else if (checks.every(c => c[0] === 'ok')) {
+      ver.textContent = 'ICP qualificado — priorize e agende a simulação!';
+      ver.style.cssText = 'background:var(--ok-bg);color:var(--ok)';
+    } else {
+      ver.textContent = 'Dados incompletos — transforme o que falta em pergunta de discovery.';
+      ver.style.cssText = 'background:var(--warn-bg);color:var(--warn)';
+    }
+  }
+
+  /* ---------- Copiar ---------- */
+  async function copy(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      let ok = false; try { ok = document.execCommand('copy'); } catch {}
+      ta.remove(); return ok;
+    }
+  }
+  $('grid').addEventListener('click', async e => {
+    const b = e.target.closest('[data-copy]');
+    if (!b) return;
+    const ok = await copy($(`s-${b.dataset.copy}`).textContent);
+    b.textContent = ok ? 'Copiado ✔' : 'Selecione e copie';
+    b.classList.toggle('done', ok);
+    setTimeout(() => { b.textContent = 'Copiar'; b.classList.remove('done'); }, 1600);
+  });
+
+  /* ---------- Abas, busca, personalização ---------- */
+  $('tabs').innerHTML = CATS.map(([k, l]) => `<button class="tab" data-cat="${k}" aria-pressed="${k === activeCat}">${l}</button>`).join('');
+  $('tabs').addEventListener('click', e => {
+    const t = e.target.closest('.tab');
+    if (!t) return;
+    activeCat = t.dataset.cat;
+    document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-pressed', String(b === t)));
+    render();
+  });
+  $('q').addEventListener('input', render);
+
+  const saved = (() => { try { return JSON.parse(localStorage.getItem('cubbo-outbound-vars') || '{}'); } catch { return {}; } })();
+  ['pAE', 'pNome', 'pMarca', 'pCanal'].forEach(id => {
+    if (saved[id]) $(id).value = saved[id];
+    $(id).addEventListener('input', () => {
+      try {
+        const s = {}; ['pAE', 'pNome', 'pMarca', 'pCanal'].forEach(k => (s[k] = $(k).value));
+        localStorage.setItem('cubbo-outbound-vars', JSON.stringify(s));
+      } catch {}
+      render();
+    });
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
